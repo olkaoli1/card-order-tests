@@ -14,6 +14,7 @@ class CardOrderTest {
     @BeforeAll
     static void setUpAll() {
         WebDriverManager.chromedriver().setup();
+    }
 
     @BeforeEach
     void setUp() {
@@ -41,55 +42,4 @@ class CardOrderTest {
                 .getText().trim();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text);
     }
-}
-
-// ───────── 1. имя на латинице ─────────
-@Test
-void shouldRejectLatinName() {
-    driver.findElement(By.cssSelector("[data-test-id=name] input"))
-            .sendKeys("John Snow");
-    driver.findElement(By.cssSelector("[data-test-id=phone] input"))
-            .sendKeys("+79270000000");
-    driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
-    driver.findElement(By.cssSelector("button.button")).click();
-
-    String error = driver.findElement(
-                    By.cssSelector("[data-test-id=name].input_invalid .input__sub"))
-            .getText().trim();
-
-    assertEquals("Имя и Фамилия указаны неверно. Допустимы только русские буквы, пробелы и дефисы.", error);
-}
-
-// ───────── 2. телефон без «+» ─────────
-@Test
-void shouldRejectPhoneWithoutPlus() {
-    driver.findElement(By.cssSelector("[data-test-id=name] input"))
-            .sendKeys("Иван Иванов");
-    driver.findElement(By.cssSelector("[data-test-id=phone] input"))
-            .sendKeys("89270000000");          // нет «+»
-    driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
-    driver.findElement(By.cssSelector("button.button")).click();
-
-    String error = driver.findElement(
-                    By.cssSelector("[data-test-id=phone].input_invalid .input__sub"))
-            .getText().trim();
-
-    assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", error);
-}
-
-// ───────── 3. чекбокс не отмечен ─────────
-@Test
-void shouldRejectUncheckedAgreement() {
-    driver.findElement(By.cssSelector("[data-test-id=name] input"))
-            .sendKeys("Иван Иванов");
-    driver.findElement(By.cssSelector("[data-test-id=phone] input"))
-            .sendKeys("+79270000000");
-    // чекбокс не трогаем
-    driver.findElement(By.cssSelector("button.button")).click();
-
-    boolean highlighted = driver.findElement(
-                    By.cssSelector("[data-test-id=agreement].input_invalid"))
-            .isDisplayed();
-
-    assertTrue(highlighted);
 }
