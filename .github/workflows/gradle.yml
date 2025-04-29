@@ -21,4 +21,4 @@ jobs:
         run: java -jar artifacts/app-order.jar &
 
       - name: Build and test
-        run: ./gradlew clean test --no-daemon
+        run: ./gradlew clean test --info
